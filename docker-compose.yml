@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  cassandra:
+    image: "cassandra:3.11.5"
+  elastic:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.5.1"
+    environment:
+      - discovery.type=single-node
+  platform:
+    build:
+        dockerfile: Dockerfile
+        context: ./platform
+    image: boodskapiot/platform
+    depends_on:
+      - cassandra
+      - elastic
+  ui:
+    build:
+        dockerfile: Dockerfile
+        context: ./ui
+    image: boodskapiot/ui
+    depends_on:
+      - platform
+  dashboard:
+    build:
+        dockerfile: Dockerfile
+        context: ./dashboard
+    depends_on:
+      - platform
+  gateway:
+    build:
+        dockerfile: Dockerfile
+        context: ./gateway
+    image: boodskapiot/gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - ui
+      - dashboard
