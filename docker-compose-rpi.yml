@@ -22,13 +22,6 @@ services:
     image: boodskapiot/ui-rpi
     depends_on:
       - platform
-  dashboard:
-    build:
-        dockerfile: Dockerfile
-        context: ./dashboard-rpi
-    image: boodskapiot/dashboard-rpi
-    depends_on:
-      - platform
   gateway:
     build:
         dockerfile: Dockerfile
@@ -38,4 +31,3 @@ services:
       - "80:80"
     depends_on:
       - ui
-      - dashboard
