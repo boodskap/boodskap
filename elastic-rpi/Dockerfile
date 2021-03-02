@@ -15,7 +15,7 @@ ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-armhf"
 
 RUN curl -sL https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.5.1-linux-x86_64.tar.gz | tar xzf - -C /opt/
 
-RUN echo xpack.ml.enabled: false >> /opt/elasticsearch-7.5.1/config/elasticsearch.yml
+COPY ./elasticsearch.yml /opt/elasticsearch-7.5.1/config/elasticsearch.yml
 
 EXPOSE 9200 9300
 
