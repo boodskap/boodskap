@@ -11,6 +11,9 @@ services:
         dockerfile: Dockerfile
         context: ./platform
     image: boodskapiot/platform
+    ports:
+      - "18080:18080"
+      - "19090:19090"
     depends_on:
       - cassandra
       - elastic
@@ -19,14 +22,19 @@ services:
         dockerfile: Dockerfile
         context: ./ui
     image: boodskapiot/ui
+    ports:
+      - "4201:4201"
     depends_on:
       - platform
   dashboard:
     build:
         dockerfile: Dockerfile
         context: ./dashboard
+    image: boodskapiot/dashboard
+    ports:
+      - "10000:10000"
     depends_on:
-      - platform
+      - ui
   gateway:
     build:
         dockerfile: Dockerfile
@@ -35,5 +43,4 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - ui
       - dashboard

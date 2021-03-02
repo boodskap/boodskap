@@ -12,14 +12,14 @@ WORKDIR /root
 
 RUN curl -sL https://github.com/BoodskapPlatform/boodskap-platform/releases/download/v${PVERSION}/boodskap-${PVERSION}.tar.gz | tar xzf - -C /root/
 
-ARG PPATCH="0018"
+ARG PPATCH="0019"
 
 RUN curl -sL https://github.com/BoodskapPlatform/boodskap-platform/releases/download/v${PVERSION}/boodskap-patch-${PVERSION}-${PPATCH}.tar.gz | tar xzf - -C /root/
 
 RUN rm -rf /root/boodskap-*
 
 WORKDIR /root/libs
-RUN rm -f patch && rm -rf patches
+RUN rm -rf patch* && rm -rf 0*
 RUN ln -s /root/patches/${PPATCH} patch
 
 WORKDIR /

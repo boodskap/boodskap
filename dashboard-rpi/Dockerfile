@@ -1,4 +1,4 @@
-FROM node:latest
+FROM arm32v7/node:latest
 RUN mkdir -p /usr/local/boodskap/webapps
 WORKDIR /usr/local/boodskap/webapps
 RUN git clone --depth 1 --branch v1.0.1 https://github.com/BoodskapPlatform/platform-dashboard.git

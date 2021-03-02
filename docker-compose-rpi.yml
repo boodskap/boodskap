@@ -20,8 +20,19 @@ services:
         dockerfile: Dockerfile
         context: ./ui-rpi
     image: boodskapiot/ui-rpi
+    ports:
+      - "4201:4201"
     depends_on:
       - platform
+  dashboard:
+    build:
+        dockerfile: Dockerfile
+        context: ./dashboard-rpi
+    image: boodskapiot/dashboard-rpi
+    ports:
+      - "10000:10000"
+    depends_on:
+      - ui
   gateway:
     build:
         dockerfile: Dockerfile
@@ -30,4 +41,4 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - ui
+      - dashboard
