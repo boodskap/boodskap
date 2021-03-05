@@ -6,13 +6,13 @@ LABEL Remarks="Boodskap IoT Platform"
 
 RUN apt-get update && apt-get install -y software-properties-common curl && add-apt-repository -y ppa:openjdk-r/ppa && apt-get update -y && apt-get install -y openjdk-13-jdk && apt-get -y clean && rm -rf /var/cache/apt/lists
 
-ARG PVERSION="3.0.2"
+ARG PVERSION="4.0.0"
 
 WORKDIR /root
 
 RUN curl -sL https://github.com/BoodskapPlatform/boodskap-platform/releases/download/v${PVERSION}/boodskap-${PVERSION}.tar.gz | tar xzf - -C /root/
 
-ARG PPATCH="0019"
+ARG PPATCH="0001"
 
 RUN curl -sL https://github.com/BoodskapPlatform/boodskap-platform/releases/download/v${PVERSION}/boodskap-patch-${PVERSION}-${PPATCH}.tar.gz | tar xzf - -C /root/
 
