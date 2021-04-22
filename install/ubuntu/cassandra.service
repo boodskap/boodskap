@@ -1,10 +1,10 @@
 [Unit]
-Description=Script to start Boodskap related services
+Description=Script to start Cassandra BigData Engine
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=/home/cassandra/start-cassandra.sh
+ExecStart=/usr/local/bin/start-cassandra.sh
 TimeoutStartSec=0
 
 [Install]

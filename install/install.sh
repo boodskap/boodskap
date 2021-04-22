@@ -65,7 +65,7 @@ function proceed() {
 
 source ./${OS}/install.sh
 
-#installCommons
+installCommons
 
 while true; do
     read -p "Do you wish to install Cassandra? [y/n]" yn

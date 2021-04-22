@@ -1,27 +1,11 @@
 #!/bin/bash
 
-EMQTT_VER="emqx-centos7-v3.2.7"
 
 function installCommons() {
-  sudo yum -y update
+  sudo apt-get -y update
   proceed
 
-  sudo yum install -y sudo git nc tar curl net-tools nano wget unzip rsyslog psmisc ncurses-compat-libs
-  proceed
-}
-
-function installJDK8() {
-  sudo yum install -y java-1.8.0-openjdk-devel
-  proceed
-}
-
-function installJDK13() {
-  sudo curl -sL https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz | tar xzvf - -C /opt/
-  proceed
-}
-
-function installNginx() {
-  sudo yum install -y nginx
+  sudo apt-get install -y sudo git software-properties-common netcat tar curl net-tools nano wget unzip rsyslog psmisc
   proceed
 }
 
@@ -29,37 +13,16 @@ function createUser() {
   id $1
   if [ $? != 0 ]; then
     echo "Creating user $1 with GID:$2"
-    sudo adduser -u $2 -p ""  $1
+    sudo adduser --disabled-password --gecos "" -u $2  $1p
     proceed
   else
     echo "User $1 exists, ignoring..."
   fi
 }
 
-function setupService() {
-  sudo cp ${WORKDIR}/centos/start-${1}.sh /usr/local/bin/
-  proceed
-  sudo chmod 744 /usr/local/bin/start-${1}.sh
-
-  sudo cp ${WORKDIR}/centos/${1}-startup.sh ${HOMEDIR}/${1}/
-  proceed
-
-  sudo cp ${WORKDIR}/centos/${1}.service /etc/systemd/system/
-  proceed
-  sudo chmod 644 /etc/systemd/system/${1}.service
-
-  sudo chown -R ${1}:${1} ${HOMEDIR}/${1}
-  proceed
-
-  sudo systemctl enable ${1}
-  proceed
-}
-
 function installCassandra() {
 
   echo "Installing cassandra"
-
-  installJDK8
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/cassandra/*
@@ -67,7 +30,7 @@ function installCassandra() {
 
   createUser cassandra $CASSANDRA_GID
 
-  sudo cat ${WORKDIR}/centos/env-cassandra.txt >> ${HOMEDIR}/cassandra/.bashrc
+  sudo cat ${WORKDIR}/ubuntu/env-cassandra.txt >> ${HOMEDIR}/cassandra/.profile
   proceed
 
   sudo curl -sL ${CASSANDRA_BASE}/${CASSANDRA_VER}-bin.tar.gz | tar xzvf - -C ${HOMEDIR}/cassandra/
@@ -79,14 +42,13 @@ function installCassandra() {
   sudo rm -rf ${HOMEDIR}/cassandra/${CASSANDRA_VER}
   proceed
 
-  setupService cassandra 
+  sudo chown -R cassandra:cassandra ${HOMEDIR}/cassandra
+  proceed
 }
 
 function installElastic() {
 
   echo "Installing elasticsearch"
-  
-  installJDK13
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/elastic/*
@@ -94,7 +56,7 @@ function installElastic() {
 
   createUser elastic $ELASTIC_GID
 
-  sudo cat ${WORKDIR}/centos/env-elastic.txt >> ${HOMEDIR}/elastic/.bashrc
+  sudo cat ${WORKDIR}/ubuntu/env-elastic.txt >> ${HOMEDIR}/elastic/.profile
   proceed
 
   sudo curl -sL ${ELASTIC_BASE}/${ELASTIC_VER}-linux-x86_64.tar.gz | tar xzvf - -C ${HOMEDIR}/elastic/
@@ -106,7 +68,8 @@ function installElastic() {
   sudo rm -rf ${HOMEDIR}/elastic/${ELASTIC_VER}
   proceed
 
-  setupService elastic
+  sudo chown -R elastic:elastic ${HOMEDIR}/elastic
+  proceed
 }
 
 function installEmqx() {
@@ -127,19 +90,18 @@ function installEmqx() {
   cd ${WORKDIR}
   sudo rm -f ${HOMEDIR}/emqtt/${EMQTT_VER}.zip
   echo "{emqx_auth_http, true}." >> ${HOMEDIR}/emqtt/data/loaded_plugins
-  cat ${WORKDIR}/centos/emqx_auth_http.conf > ${HOMEDIR}/emqtt/etc/plugins/emqx_auth_http.conf
+  cat ${WORKDIR}/ubuntu/emqx_auth_http.conf > ${HOMEDIR}/emqtt/etc/plugins/emqx_auth_http.conf
   proceed
 
   sudo rm -rf ${HOMEDIR}/eqtt/emqx
   proceed
 
-  setupService emqtt
+  sudo chown -R emqtt:emqtt ${HOMEDIR}/emqtt
+  proceed
 }
 
 function installKibana() {
   echo "Installing kibana"
-
-  installJDK13
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/kibana/*
@@ -147,7 +109,7 @@ function installKibana() {
 
   createUser kibana $KIBANA_GID
 
-  sudo cat ${WORKDIR}/centos/env-elastic.txt >> ${HOMEDIR}/kibana/.bashrc
+  sudo cat ${WORKDIR}/ubuntu/env-elastic.txt >> ${HOMEDIR}/kibana/.profile
   proceed
 
   sudo curl -sL ${KIBANA_BASE}/${KIBANA_VER}-linux-x86_64.tar.gz | tar xzvf - -C ${HOMEDIR}/kibana/
@@ -159,13 +121,12 @@ function installKibana() {
   sudo rm -rf ${HOMEDIR}/kibana/${KIBANA_VER}-linux-x86_64
   proceed
 
-  setupService kibana
+  sudo chown -R kibana:kibana ${HOMEDIR}/kibana
+  proceed
 }
 
 function installBoodskap() {
   echo "Installing boodskap"
-
-  installJDK13
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/boodskap/*
@@ -173,7 +134,7 @@ function installBoodskap() {
 
   createUser boodskap $BOODSKAP_GID
 
-  sudo cat ${WORKDIR}/centos/env-elastic.txt >> ${HOMEDIR}/boodskap/.bashrc
+  sudo cat ${WORKDIR}/ubuntu/env-elastic.txt >> ${HOMEDIR}/boodskap/.profile
   proceed
 
   sudo curl -sL ${BOODSKAP_BASE}/v${BOODSKAP_VER}/boodskap-${BOODSKAP_VER}.tar.gz | tar xzvf - -C ${HOMEDIR}/boodskap/
@@ -186,16 +147,13 @@ function installBoodskap() {
 
   ln -s ${HOMEDIR}/boodskap/patches/${BOODSKAP_PATCH_VER} ${HOMEDIR}/boodskap/libs/patches
 
-  sudo chmod +x ${HOMEDIR}/boodskap/bin/*.sh
-
-  setupService boodskap
+  sudo chown -R boodskap:boodskap ${HOMEDIR}/boodskap
+  proceed
 }
 
 function installBoodskapUi() {
 
   echo "Installing boodskap dashboard and developer console"
-
-  installNginx
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/boodskapui/*
@@ -209,14 +167,6 @@ function installBoodskapUi() {
 
   git clone https://github.com/BoodskapPlatform/platform-dashboard.git ${HOMEDIR}/boodskapui/webapps/platform-dashboard
 
-  cd ${HOMEDIR}/boodskapui/webapps/boodskap-ui
-  npm install
-  sudo cat ${WORKDIR}/ubuntu/boodskapui.properties > ${HOMEDIR}/boodskapui/webapps/boodskap-ui/boodskapui.properties
-  node build.js
-
-  cd ${HOMEDIR}/boodskapui/webapps/platform-dashboard
-  npm install
-  node build.js
-
-  setupService boodskapui
+  sudo chown -R boodskapui:boodskapui ${HOMEDIR}/boodskapui
+  proceed
 }

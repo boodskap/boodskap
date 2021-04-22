@@ -1,2 +1,2 @@
 #!/bin/bash
-/bin/su - boodskap /home/boodskap/startup.sh
+/bin/su - boodskap /home/boodskap/boodskap-startup.sh

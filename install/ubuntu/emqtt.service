@@ -1,10 +1,10 @@
 [Unit]
-Description=Script to start Boodskap related services
+Description=Script to start EMQX Server
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=/home/boodskap/start-emqtt.sh
+ExecStart=/usr/local/bin/start-emqtt.sh
 TimeoutStartSec=0
 
 [Install]

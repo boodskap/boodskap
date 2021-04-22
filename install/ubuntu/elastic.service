@@ -1,10 +1,10 @@
 [Unit]
-Description=Script to start Boodskap related services
+Description=Script to start ElasticSearch engine
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=/home/boodskap/start-elastic.sh
+ExecStart=/usr/local/bin/start-elastic.sh
 TimeoutStartSec=0
 
 [Install]

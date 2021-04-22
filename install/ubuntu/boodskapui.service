@@ -1,10 +1,10 @@
 [Unit]
-Description=Script to start Boodskap related services
+Description=Script to start Boodskap Admin UI
 After=network.target boodskap.service
 
 [Service]
 Type=simple
-ExecStart=/home/boodskap/start-ui.sh
+ExecStart=/usr/local/bin/start-boodskapui.sh
 TimeoutStartSec=0
 
 [Install]

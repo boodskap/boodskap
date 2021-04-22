@@ -1,10 +1,10 @@
 [Unit]
-Description=Script to start Boodskap IoT Platform
+Description=Start Kibana Service
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/start-boodskap.sh
+ExecStart=/usr/local/bin/start-kibana.sh
 TimeoutStartSec=0
 
 [Install]

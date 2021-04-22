@@ -1,2 +1,2 @@
 #!/bin/bash
-/bin/su - emqtt /home/emqtt/startup.sh
+/bin/su - emqtt /home/emqtt/emqtt-startup.sh

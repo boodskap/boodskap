@@ -1,11 +1,10 @@
 #!/bin/bash
 
-
 function installCommons() {
   sudo apt-get -y update
   proceed
 
-  sudo apt-get install -y sudo git software-properties-common netcat tar curl net-tools nano wget unzip rsyslog psmisc
+  sudo apt-get install -y sudo git software-properties-common netcat tar curl net-tools nano wget unzip rsyslog psmisc libncurses5
   proceed
 }
 
@@ -13,16 +12,54 @@ function createUser() {
   id $1
   if [ $? != 0 ]; then
     echo "Creating user $1 with GID:$2"
-    sudo adduser --disabled-password --gecos "" -u $2  $1p
+    sudo adduser --disabled-password --gecos "" -u $2  $1
     proceed
   else
     echo "User $1 exists, ignoring..."
   fi
 }
 
+function installJDK8() {
+  sudo apt-get install -y openjdk-8-jdk
+  proceed
+}
+
+function installJDK13() {
+  sudo apt-get install -y openjdk-13-jdk
+  proceed
+}
+
+function installNginx() {
+  sudo apt-get install -y nginx nodejs npm
+  proceed
+  sudo npm install pm2 -g
+  proceed
+}
+
+function setupService() {
+  sudo cp ${WORKDIR}/ubuntu/start-${1}.sh /usr/local/bin/
+  proceed
+  sudo chmod 744 /usr/local/bin/start-${1}.sh
+
+  sudo cp ${WORKDIR}/ubuntu/${1}-startup.sh ${HOMEDIR}/${1}/
+  proceed
+
+  sudo cp ${WORKDIR}/ubuntu/${1}.service /etc/systemd/system/
+  proceed
+  sudo chmod 644 /etc/systemd/system/${1}.service
+
+  sudo chown -R ${1}:${1} ${HOMEDIR}/${1}
+  proceed
+
+  sudo systemctl enable ${1}
+  proceed
+}
+
 function installCassandra() {
 
   echo "Installing cassandra"
+
+  installJDK8
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/cassandra/*
@@ -42,13 +79,14 @@ function installCassandra() {
   sudo rm -rf ${HOMEDIR}/cassandra/${CASSANDRA_VER}
   proceed
 
-  sudo chown -R cassandra:cassandra ${HOMEDIR}/cassandra
-  proceed
+  setupService cassandra 
 }
 
 function installElastic() {
 
   echo "Installing elasticsearch"
+  
+  installJDK13
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/elastic/*
@@ -68,8 +106,7 @@ function installElastic() {
   sudo rm -rf ${HOMEDIR}/elastic/${ELASTIC_VER}
   proceed
 
-  sudo chown -R elastic:elastic ${HOMEDIR}/elastic
-  proceed
+  setupService elastic
 }
 
 function installEmqx() {
@@ -96,12 +133,13 @@ function installEmqx() {
   sudo rm -rf ${HOMEDIR}/eqtt/emqx
   proceed
 
-  sudo chown -R emqtt:emqtt ${HOMEDIR}/emqtt
-  proceed
+  setupService emqtt
 }
 
 function installKibana() {
   echo "Installing kibana"
+
+  installJDK13
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/kibana/*
@@ -121,12 +159,13 @@ function installKibana() {
   sudo rm -rf ${HOMEDIR}/kibana/${KIBANA_VER}-linux-x86_64
   proceed
 
-  sudo chown -R kibana:kibana ${HOMEDIR}/kibana
-  proceed
+  setupService kibana
 }
 
 function installBoodskap() {
   echo "Installing boodskap"
+
+  installJDK13
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/boodskap/*
@@ -147,13 +186,16 @@ function installBoodskap() {
 
   ln -s ${HOMEDIR}/boodskap/patches/${BOODSKAP_PATCH_VER} ${HOMEDIR}/boodskap/libs/patches
 
-  sudo chown -R boodskap:boodskap ${HOMEDIR}/boodskap
-  proceed
+  sudo chmod +x ${HOMEDIR}/boodskap/bin/*.sh
+
+  setupService boodskap
 }
 
 function installBoodskapUi() {
 
   echo "Installing boodskap dashboard and developer console"
+
+  installNginx
 
   if [ ${CLEANUP} == 1 ]; then
     sudo rm -rf ${HOMEDIR}/boodskapui/*
@@ -167,6 +209,17 @@ function installBoodskapUi() {
 
   git clone https://github.com/BoodskapPlatform/platform-dashboard.git ${HOMEDIR}/boodskapui/webapps/platform-dashboard
 
-  sudo chown -R boodskapui:boodskapui ${HOMEDIR}/boodskapui
-  proceed
+  cd ${HOMEDIR}/boodskapui/webapps/boodskap-ui
+  npm install
+  sudo cat ${WORKDIR}/ubuntu/boodskapui.properties > ${HOMEDIR}/boodskapui/webapps/boodskap-ui/boodskapui.properties
+  node build.js
+
+  cd ${HOMEDIR}/boodskapui/webapps/platform-dashboard
+  npm install
+  node build.js
+
+  setupService boodskapui
+
+  sudo cat ${WORKDIR}/ubuntu/nginx-default > /etc/nginx/sites-enabled/default
+  sudo service nginx restart
 }
