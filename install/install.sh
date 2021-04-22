@@ -66,9 +66,59 @@ function proceed() {
 source ./${OS}/install.sh
 
 #installCommons
-#installCassandra
-#installElastic
-#installEmqx
-#installKibana
-#installBoodskap
-installBoodskapUi
+
+while true; do
+    read -p "Do you wish to install Cassandra? [y/n]" yn
+    case $yn in
+        [Yy]* ) installCassandra; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+while true; do
+    read -p "Do you wish to install ElasticSearch? [y/n]" yn
+    case $yn in
+           [Yy]* ) installElastic; break;;
+           [Nn]* ) break;;
+           * ) echo "Please answer yes or no.";;
+    esac
+done
+
+while true; do
+    read -p "Do you wish to install Kibana? [y/n]" yn
+    case $yn in
+           [Yy]* ) installKibana; break;;
+           [Nn]* ) break;;
+           * ) echo "Please answer yes or no.";;
+    esac
+done
+
+while true; do
+    read -p "Do you wish to install Emqx? [y/n]" yn
+    case $yn in
+           [Yy]* ) installEmqx; break;;
+           [Nn]* ) break;;
+           * ) echo "Please answer yes or no.";;
+    esac
+done
+
+while true; do
+    read -p "Do you wish to install Boodskap IoT Platform? [y/n]" yn
+    case $yn in
+           [Yy]* ) installBoodskap; break;;
+           [Nn]* ) break;;
+           * ) echo "Please answer yes or no.";;
+    esac
+done
+
+while true; do
+    read -p "Do you wish to install Boodskap Admin UI? [y/n]" yn
+    case $yn in
+           [Yy]* ) installBoodskapUi; break;;
+           [Nn]* ) break;;
+           * ) echo "Please answer yes or no.";;
+    esac
+done
+
+echo "All Done."
