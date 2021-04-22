@@ -1,0 +1,11 @@
+[Unit]
+Description=Script to start Boodskap related services
+After=network.target cassandra.service elastic.service emqtt.service
+
+[Service]
+Type=simple
+ExecStart=/home/boodskap/start-boodskap.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target

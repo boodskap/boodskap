@@ -1,0 +1,11 @@
+[Unit]
+Description=Script to start Boodskap related services
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/boodskap/start-emqtt.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target

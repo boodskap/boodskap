@@ -1,0 +1,11 @@
+[Unit]
+Description=Script to start Boodskap related services
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/cassandra/start-cassandra.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
