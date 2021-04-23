@@ -1,0 +1,11 @@
+[Unit]
+Description=Script to start Boodskap Admin UI
+After=network.target boodskap.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/start-boodskapui.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target

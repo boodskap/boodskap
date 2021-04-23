@@ -219,4 +219,8 @@ function installBoodskapUi() {
   node build.js
 
   setupService boodskapui
+
+  sudo cat ${WORKDIR}/redhat/nginx-default > /etc/nginx/conf.d/default.conf
+  systemctl enable nginx
+  sudo service nginx restart
 }

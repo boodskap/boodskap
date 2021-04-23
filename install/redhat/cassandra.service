@@ -1,0 +1,11 @@
+[Unit]
+Description=Script to start Cassandra BigData Engine
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/start-cassandra.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target

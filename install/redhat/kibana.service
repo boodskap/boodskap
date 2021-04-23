@@ -1,0 +1,11 @@
+[Unit]
+Description=Start Kibana Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/start-kibana.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
