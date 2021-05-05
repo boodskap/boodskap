@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 services:
   cassandra:
     image: "cassandra:3.11.5"
@@ -21,19 +21,6 @@ services:
     environment:
       SERVER_NAME: kibana.boodskap.xyz
       ELASTICSEARCH_HOSTS: http://elastic
-  platform:
-    image: boodskapiot/platform:4.0.0-0007
-    ports:
-      - "18080:18080"
-      - "19090:19090"
-      - "1883:1883"
-      - "8083:8083"
-    depends_on:
-      - cassandra
-      - elastic
-    volumes:
-      - platformdata:/home/boodskap/data
-      - platformwork:/home/boodskap/work
   ui:
     image: boodskapiot/ui:3.0.20
     ports:
