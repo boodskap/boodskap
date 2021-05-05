@@ -20,7 +20,9 @@ services:
     image: docker.elastic.co/kibana/kibana:7.5.1
     environment:
       SERVER_NAME: kibana.boodskap.xyz
-      ELASTICSEARCH_HOSTS: http://elastic
+      ELASTICSEARCH_HOSTS: http://elastic:9200
+    ports:
+      - "5601:5601"
   ui:
     image: boodskapiot/ui:3.0.20
     ports:
