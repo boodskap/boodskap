@@ -17,7 +17,7 @@ services:
     volumes:
       - elastic:/usr/share/elasticsearch/data
   platform:
-    image: boodskapiot/platform:4.0.0-0008
+    image: boodskapiot/platform:4.0.0-0009
     ports:
       - "18080:18080"
       - "19090:19090"
