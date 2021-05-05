@@ -17,7 +17,7 @@ services:
     volumes:
       - elastic:/usr/share/elasticsearch/data
   platform:
-    image: boodskapiot/platform
+    image: boodskapiot/platform:4.0.0-0007
     ports:
       - "18080:18080"
       - "19090:19090"
@@ -30,13 +30,13 @@ services:
       - platformdata:/home/boodskap/data
       - platformwork:/home/boodskap/work
   ui:
-    image: boodskapiot/ui
+    image: boodskapiot/ui:3.0.20
     ports:
       - "4201:4201"
     depends_on:
       - platform
   dashboard:
-    image: boodskapiot/dashboard
+    image: boodskapiot/dashboard:1.0.3
     ports:
       - "10000:10000"
     depends_on:

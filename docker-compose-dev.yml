@@ -21,14 +21,30 @@ services:
     environment:
       SERVER_NAME: kibana.boodskap.xyz
       ELASTICSEARCH_HOSTS: http://elastic
+  platform:
+    image: boodskapiot/platform:4.0.0-0007
+    ports:
+      - "18080:18080"
+      - "19090:19090"
+      - "1883:1883"
+      - "8083:8083"
+    depends_on:
+      - cassandra
+      - elastic
+    volumes:
+      - platformdata:/home/boodskap/data
+      - platformwork:/home/boodskap/work
   ui:
-    image: boodskapiot/ui
+    image: boodskapiot/ui:3.0.20
     ports:
       - "4201:4201"
+    depends_on:
+      - cassandra
+      - elastic
     volumes:
       - ${HOME}/git2/boodskap-iot-platform/boodskap-iot-platform/boodskap-apigen/src/main/resources/api/api.yaml
   dashboard:
-    image: boodskapiot/dashboard
+    image: boodskapiot/dashboard:1.0.3
     ports:
       - "10000:10000"
     depends_on:
