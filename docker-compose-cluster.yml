@@ -26,8 +26,8 @@ services:
     build:
       context: ./platform
       args:
-        "PVERSION": "4.6.0"
-        "PPATCH": "03"
+        "PVERSION": "4.6.2"
+        "PPATCH": "00"
         "MODE": "cluster"
     ports:
       - "18080:18080"
@@ -39,13 +39,13 @@ services:
     volumes:
       - ./data1:/root/data
       - ./share:/root/data/share
-      - platformwork1:/root/work
+      - ./work1:/root/work
   platform2:
     build:
       context: ./platform
       args:
-        "PVERSION": "4.6.0"
-        "PPATCH": "03"
+        "PVERSION": "4.6.2"
+        "PPATCH": "00"
         "MODE": "cluster"
     ports:
       - "18081:18080"
@@ -57,13 +57,13 @@ services:
     volumes:
       - ./data2:/root/data
       - ./share:/root/data/share
-      - platformwork2:/root/work
+      - ./work2:/root/work
   platform3:
     build:
       context: ./platform
       args:
-        "PVERSION": "4.6.0"
-        "PPATCH": "03"
+        "PVERSION": "4.6.2"
+        "PPATCH": "00"
         "MODE": "cluster"
     ports:
       - "18082:18080"
@@ -75,7 +75,7 @@ services:
     volumes:
       - ./data3:/root/data
       - ./share:/root/data/share
-      - platformwork3:/root/work
+      - ./work3:/root/work
   ui:
     build:
       context: ./ui
@@ -97,6 +97,10 @@ services:
         CONFIG: "cluster"
     ports:
       - "80:80"
+    depends_on:
+      - platform1
+      - platform2
+      - platform3
 volumes:
   cassandra:
     driver: local

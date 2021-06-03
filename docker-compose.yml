@@ -20,8 +20,8 @@ services:
     build:
       context: ./platform
       args:
-        PVERSION: "4.6.0"
-        PPATCH: "03"
+        PVERSION: "4.6.2"
+        PPATCH: "00"
         MODE: "single"
     ports:
       - "18080:18080"
@@ -30,9 +30,9 @@ services:
       - cassandra
       - elastic
     volumes:
-      - platformdata:/root/data
-      - platformshare:/root/data/share
-      - platformwork:/home/boodskap/work
+      - ./data:/root/data
+      - ./share:/root/data/share
+      - ./work:/home/boodskap/work
   ui:
     build:
       context: ./ui
@@ -51,9 +51,11 @@ services:
     build:
       context: ./gateway
       args:
-        CONFIG: "cluster"
+        CONFIG: "default"
     ports:
       - "80:80"
+    depends_on:
+      - platform
 volumes:
   cassandra:
     driver: local

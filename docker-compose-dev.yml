@@ -16,8 +16,28 @@ services:
       - "9300:9300"
     volumes:
       - elastic:/usr/share/elasticsearch/data
+  ui:
+    build:
+      context: ./ui
+      args:
+        VERSION: "v3.1.8"
+    ports:
+      - "4201:4201"
+  dashboard:
+    build:
+      context: ./dashboard
+      args:
+        VERSION: "v1.0.3"
+    ports:
+      - "10000:10000"
 volumes:
   cassandra:
     driver: local
   elastic:
+    driver: local
+  platformdata:
+    driver: local
+  platformshare:
+    driver: local
+  platformwork:
     driver: local
