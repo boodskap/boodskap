@@ -17,42 +17,51 @@ services:
     volumes:
       - elastic:/usr/share/elasticsearch/data
   platform:
-    image: boodskapiot/platform:4.0.0-0009
+    build:
+      context: ./platform
+      args:
+        PVERSION: "4.6.0"
+        PPATCH: "03"
+        MODE: "single"
     ports:
       - "18080:18080"
       - "19090:19090"
-      - "1883:1883"
-      - "8083:8083"
     depends_on:
       - cassandra
       - elastic
     volumes:
-      - platformdata:/home/boodskap/data
+      - platformdata:/root/data
+      - platformshare:/root/data/share
       - platformwork:/home/boodskap/work
   ui:
-    image: boodskapiot/ui:3.0.20
+    build:
+      context: ./ui
+      args:
+        VERSION: "v3.1.8"
     ports:
       - "4201:4201"
-    depends_on:
-      - platform
   dashboard:
-    image: boodskapiot/dashboard:1.0.3
+    build:
+      context: ./dashboard
+      args:
+        VERSION: "v1.0.3"
     ports:
       - "10000:10000"
-    depends_on:
-      - ui
   gateway:
-    image: boodskapiot/gateway
+    build:
+      context: ./gateway
+      args:
+        CONFIG: "cluster"
     ports:
       - "80:80"
-    depends_on:
-      - dashboard
 volumes:
   cassandra:
     driver: local
   elastic:
     driver: local
   platformdata:
+    driver: local
+  platformshare:
     driver: local
   platformwork:
     driver: local

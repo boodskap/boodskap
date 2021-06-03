@@ -29,9 +29,7 @@
 						class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
 						<property name="addresses">
 							<list>
-								<value>platform1:48500</value>
-                                                                <value>platform2:48500</value>
-                                                                <value>platform3:48500</value>
+								<value>platform:48500</value>
 							</list>
 						</property>
 					</bean>

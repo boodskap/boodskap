@@ -2,7 +2,7 @@
 
 cd /root
 
-/root/bin/ignite.sh -f /root/config/cluster.xml &
+/root/bin/ignite.sh -f /root/config/default-config.xml &
 
 sleep 30
 

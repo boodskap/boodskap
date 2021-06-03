@@ -1,3 +1,6 @@
+ARG CONFIG
 FROM nginx
-COPY ./default.conf /etc/nginx/conf.d/default.conf
+ARG CONFIG
+ENV CTYPE=$CONFIG
+COPY ./${CTYPE}.conf /etc/nginx/conf.d/default.conf
 

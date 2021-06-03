@@ -1,0 +1,110 @@
+version: "3.3"
+services:
+  cassandra:
+    image: "cassandra:3.11.5"
+    ports:
+      - "9042:9042"
+      - "7000:7000"
+    volumes:
+      - cassandra:/var/lib/cassandra
+  elastic:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.5.1"
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elastic:/usr/share/elasticsearch/data
+  mqtt:
+    build:
+      context: ./mqtt
+    ports:
+      - "8083:8083"
+      - "1883:1883"
+  platform1:
+    build:
+      context: ./platform
+      args:
+        "PVERSION": "4.6.0"
+        "PPATCH": "03"
+        "MODE": "cluster"
+    ports:
+      - "18080:18080"
+      - "19090:19090"
+    depends_on:
+      - cassandra
+      - elastic
+      - mqtt
+    volumes:
+      - ./data1:/root/data
+      - ./share:/root/data/share
+      - platformwork1:/root/work
+  platform2:
+    build:
+      context: ./platform
+      args:
+        "PVERSION": "4.6.0"
+        "PPATCH": "03"
+        "MODE": "cluster"
+    ports:
+      - "18081:18080"
+      - "19091:19090"
+    depends_on:
+      - cassandra
+      - elastic
+      - mqtt
+    volumes:
+      - ./data2:/root/data
+      - ./share:/root/data/share
+      - platformwork2:/root/work
+  platform3:
+    build:
+      context: ./platform
+      args:
+        "PVERSION": "4.6.0"
+        "PPATCH": "03"
+        "MODE": "cluster"
+    ports:
+      - "18082:18080"
+      - "19092:19090"
+    depends_on:
+      - cassandra
+      - elastic
+      - mqtt
+    volumes:
+      - ./data3:/root/data
+      - ./share:/root/data/share
+      - platformwork3:/root/work
+  ui:
+    build:
+      context: ./ui
+      args:
+        VERSION: "v3.1.8"
+    ports:
+      - "4201:4201"
+  dashboard:
+    build:
+      context: ./dashboard
+      args:
+        VERSION: "v1.0.3"
+    ports:
+      - "10000:10000"
+  gateway:
+    build:
+      context: ./gateway
+      args:
+        CONFIG: "cluster"
+    ports:
+      - "80:80"
+volumes:
+  cassandra:
+    driver: local
+  elastic:
+    driver: local
+  platformwork1:
+    driver: local
+  platformwork2:
+    driver: local
+  platformwork3:
+    driver: local

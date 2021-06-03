@@ -1,5 +1,0 @@
-gateway
-cassandra
-elastic
-platform
-

@@ -16,40 +16,8 @@ services:
       - "9300:9300"
     volumes:
       - elastic:/usr/share/elasticsearch/data
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.5.1
-    environment:
-      SERVER_NAME: kibana.boodskap.xyz
-      ELASTICSEARCH_HOSTS: http://elastic:9200
-    ports:
-      - "5601:5601"
-  ui:
-    image: boodskapiot/ui:3.0.20
-    ports:
-      - "4201:4201"
-    depends_on:
-      - cassandra
-      - elastic
-    volumes:
-      - ${HOME}/git2/boodskap-iot-platform/boodskap-iot-platform/boodskap-apigen/src/main/resources/api/api.yaml
-  dashboard:
-    image: boodskapiot/dashboard:1.0.3
-    ports:
-      - "10000:10000"
-    depends_on:
-      - ui
-  gateway:
-    image: boodskapiot/gatewaydev
-    ports:
-      - "80:80"
-    depends_on:
-      - dashboard
 volumes:
   cassandra:
     driver: local
   elastic:
-    driver: local
-  platformdata:
-    driver: local
-  platformwork:
     driver: local
