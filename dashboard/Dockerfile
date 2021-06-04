@@ -10,4 +10,6 @@ RUN npm install
 COPY ./dashboard.properties /usr/local/boodskap/webapps/platform-dashboard/dashboard.properties
 RUN node build.js
 
+EXPOSE 10000
+
 ENTRYPOINT ["node", "platform-dashboard-node.js"]
