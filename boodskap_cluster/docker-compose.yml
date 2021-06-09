@@ -27,7 +27,7 @@ services:
       context: ../platform
       args:
         "PVERSION": "4.6.2"
-        "PPATCH": "11"
+        "PPATCH": "12"
         "MODE": "cluster"
     ports:
       - "18080:18080"
@@ -45,7 +45,7 @@ services:
       context: ../platform
       args:
         "PVERSION": "4.6.2"
-        "PPATCH": "11"
+        "PPATCH": "12"
         "MODE": "cluster"
     ports:
       - "18081:18080"
@@ -63,7 +63,7 @@ services:
       context: ../platform
       args:
         "PVERSION": "4.6.2"
-        "PPATCH": "11"
+        "PPATCH": "12"
         "MODE": "cluster"
     ports:
       - "18082:18080"
