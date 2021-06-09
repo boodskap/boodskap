@@ -21,7 +21,7 @@ services:
       context: ./platform
       args:
         PVERSION: "4.6.2"
-        PPATCH: "09"
+        PPATCH: "10"
         MODE: "single"
     ports:
       - "18080:18080"
