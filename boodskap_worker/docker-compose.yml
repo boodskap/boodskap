@@ -18,16 +18,16 @@ services:
       - elastic:/usr/share/elasticsearch/data
   mqtt:
     build:
-      context: ./mqtt
+      context: ../mqtt
     ports:
       - "8083:8083"
       - "1883:1883"
   platform1:
     build:
-      context: ./platform
+      context: ../platform
       args:
         "PVERSION": "4.6.2"
-        "PPATCH": "00"
+        "PPATCH": "09"
         "MODE": "cluster"
     ports:
       - "18080:18080"
@@ -37,15 +37,15 @@ services:
       - elastic
       - mqtt
     volumes:
-      - ./data1:/root/data
-      - ./share:/root/data/share
-      - ./work1:/root/work
+      - ../data1:/root/data
+      - ../share:/root/data/share
+      - ../work1:/root/work
   platform2:
     build:
-      context: ./platform
+      context: ../platform
       args:
         "PVERSION": "4.6.2"
-        "PPATCH": "00"
+        "PPATCH": "09"
         "MODE": "cluster"
     ports:
       - "18081:18080"
@@ -55,15 +55,15 @@ services:
       - elastic
       - mqtt
     volumes:
-      - ./data2:/root/data
-      - ./share:/root/data/share
-      - ./work2:/root/work
+      - ../data2:/root/data
+      - ../share:/root/data/share
+      - ../work2:/root/work
   platform3:
     build:
-      context: ./platform
+      context: ../platform
       args:
         "PVERSION": "4.6.2"
-        "PPATCH": "00"
+        "PPATCH": "09"
         "MODE": "cluster"
     ports:
       - "18082:18080"
@@ -73,26 +73,37 @@ services:
       - elastic
       - mqtt
     volumes:
-      - ./data3:/root/data
-      - ./share:/root/data/share
-      - ./work3:/root/work
+      - ../data3:/root/data
+      - ../share:/root/data/share
+      - ../work3:/root/work
+  worker1:
+    build:
+      context: ../platform
+      args:
+        "PVERSION": "4.6.2"
+        "PPATCH": "09"
+        "MODE": "worker"
+    depends_on:
+      - platform1
+    volumes:
+      - ../share:/root/data/share
   ui:
     build:
-      context: ./ui
+      context: ../ui
       args:
         VERSION: "v3.1.8"
     ports:
       - "4201:4201"
   dashboard:
     build:
-      context: ./dashboard
+      context: ../dashboard
       args:
         VERSION: "v1.0.3"
     ports:
       - "10000:10000"
   gateway:
     build:
-      context: ./gateway
+      context: ../gateway
       args:
         CONFIG: "cluster"
     ports:
@@ -105,10 +116,4 @@ volumes:
   cassandra:
     driver: local
   elastic:
-    driver: local
-  platformwork1:
-    driver: local
-  platformwork2:
-    driver: local
-  platformwork3:
     driver: local
