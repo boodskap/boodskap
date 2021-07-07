@@ -26,8 +26,8 @@ services:
     build:
       context: ../platform
       args:
-        "PVERSION": "4.6.2"
-        "PPATCH": "12"
+        "PVERSION": "4.6.3"
+        "PPATCH": "05"
         "MODE": "cluster"
     ports:
       - "18080:18080"
@@ -44,8 +44,8 @@ services:
     build:
       context: ../platform
       args:
-        "PVERSION": "4.6.2"
-        "PPATCH": "12"
+        "PVERSION": "4.6.3"
+        "PPATCH": "05"
         "MODE": "cluster"
     ports:
       - "18081:18080"
@@ -62,8 +62,8 @@ services:
     build:
       context: ../platform
       args:
-        "PVERSION": "4.6.2"
-        "PPATCH": "12"
+        "PVERSION": "4.6.3"
+        "PPATCH": "05"
         "MODE": "cluster"
     ports:
       - "18082:18080"
@@ -80,7 +80,7 @@ services:
     build:
       context: ../ui
       args:
-        VERSION: "v3.1.8"
+        VERSION: "v3.1.14"
     ports:
       - "4201:4201"
   dashboard:

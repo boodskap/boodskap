@@ -20,8 +20,8 @@ services:
     build:
       context: ./platform
       args:
-        PVERSION: "4.6.2"
-        PPATCH: "12"
+        PVERSION: "4.6.3"
+        PPATCH: "05"
         MODE: "single"
     ports:
       - "18080:18080"

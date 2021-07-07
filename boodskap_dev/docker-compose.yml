@@ -20,7 +20,7 @@ services:
     build:
       context: ../ui
       args:
-        VERSION: "v3.1.8"
+        VERSION: "v3.1.14"
     ports:
       - "4201:4201"
   dashboard:
