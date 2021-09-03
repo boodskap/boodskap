@@ -1,6 +1,7 @@
 #!/bin/bash
-PVERSION="4.0.0"
-PPATCH="0010"
-echo "Building with"
-echo "docker build --build-arg PVERSION=${PVERSION} --build-arg PPATCH=${PPATCH} -t boodskapiot/platform:${PVERSION}-${PPATCH} -t boodskapiot/platform:latest ."
-docker build --build-arg PVERSION=${PVERSION} --build-arg PPATCH=${PPATCH} -t boodskapiot/platform:${PVERSION}-${PPATCH} -t boodskapiot/platform:latest .
+PVERSION="4.2.8"
+PPATCH="02"
+MODE="single"
+
+echo "Building..."
+docker build --build-arg PVERSION=${PVERSION} --build-arg PPATCH=${PPATCH} --build-arg MODE=${MODE} -t boodskapiot/platform:${PVERSION}-${PPATCH} -t boodskapiot/platform:latest .

@@ -17,12 +17,7 @@ services:
     volumes:
       - elastic:/usr/share/elasticsearch/data
   platform:
-    build:
-      context: ./platform
-      args:
-        PVERSION: "4.6.3"
-        PPATCH: "05"
-        MODE: "single"
+    image: "boodskapiot/platform:4.2.8-02"
     ports:
       - "18080:18080"
       - "19090:19090"
@@ -34,24 +29,15 @@ services:
       - ./share:/root/data/share
       - ./work:/home/boodskap/work
   ui:
-    build:
-      context: ./ui
-      args:
-        VERSION: "v3.1.8"
+    image: "boodskapiot/ui:v3.2.5"
     ports:
       - "4201:4201"
   dashboard:
-    build:
-      context: ./dashboard
-      args:
-        VERSION: "v1.0.3"
+    image: "boodskapiot/dashboard:v1.0.3"
     ports:
       - "10000:10000"
   gateway:
-    build:
-      context: ./gateway
-      args:
-        CONFIG: "default"
+    image: "boodskapiot/gateway:v1.0.3"
     ports:
       - "80:80"
     depends_on:

@@ -1,1 +1,3 @@
-docker build -t boodskapiot/dashboard:latest -t boodskapiot/dashboard:1.0.3 .
+VERSION="v1.0.3"
+
+docker build --build-arg VERSION=${VERSION} -t boodskapiot/dashboard:latest -t boodskapiot/dashboard:${VERSION} .
