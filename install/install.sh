@@ -22,8 +22,8 @@ KIBANA_VER="kibana-7.5.1"
 EMQTT_BASE="https://www.emqx.io/downloads/broker/v3.2.7"
 EMQTT_VER="emqx-ubuntu18.04-v3.2.7"
 BOODSKAP_BASE="https://github.com/BoodskapPlatform/boodskap-platform/releases/download"
-BOODSKAP_VER="3.0.2"
-BOODSKAP_PATCH_VER="0019"
+BOODSKAP_VER="4.4.9"
+BOODSKAP_PATCH_VER="02"
 
 
 if cat /etc/*release | grep ^NAME | grep CentOS; then

@@ -176,11 +176,13 @@ function installBoodskap() {
   sudo cat ${WORKDIR}/ubuntu/env-elastic.txt >> ${HOMEDIR}/boodskap/.profile
   proceed
 
-  sudo curl -sL ${BOODSKAP_BASE}/v${BOODSKAP_VER}/boodskap-${BOODSKAP_VER}.tar.gz | tar xzvf - -C ${HOMEDIR}/boodskap/
+  echo Dowloading ${BOODSKAP_BASE}/v${BOODSKAP_VER}/boodskap-${BOODSKAP_VER}-00.tar.gz
+  sudo curl -sL ${BOODSKAP_BASE}/v${BOODSKAP_VER}/boodskap-${BOODSKAP_VER}-00.tar.gz | tar xzvf - -C ${HOMEDIR}/boodskap/
   proceed
 
   sudo rm -rf ${HOMEDIR}/boodskap/libs/patches
 
+  echo Downloading ${BOODSKAP_BASE}/v${BOODSKAP_VER}/boodskap-patch-${BOODSKAP_VER}-${BOODSKAP_PATCH_VER}.tar.gz
   sudo curl -sL ${BOODSKAP_BASE}/v${BOODSKAP_VER}/boodskap-patch-${BOODSKAP_VER}-${BOODSKAP_PATCH_VER}.tar.gz | tar xzvf - -C ${HOMEDIR}/boodskap/
   proceed
 
