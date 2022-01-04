@@ -1,10 +1,10 @@
 #!/bin/bash
 
 function installCommons() {
-  sudo apt-get -y update
+  sudo apt-get -y --force-yes update
   proceed
 
-  sudo apt-get install -y sudo git software-properties-common netcat tar curl net-tools nano wget unzip rsyslog psmisc libncurses5
+  sudo apt-get install -y --force-yes sudo git software-properties-common netcat tar curl net-tools nano wget unzip rsyslog psmisc libncurses5
   proceed
 }
 
@@ -20,17 +20,17 @@ function createUser() {
 }
 
 function installJDK8() {
-  sudo apt-get install -y openjdk-8-jdk
+  sudo apt-get install -y --force-yes openjdk-8-jdk
   proceed
 }
 
 function installJDK13() {
-  sudo apt-get install -y openjdk-13-jdk
+  sudo apt-get install -y --force-yes openjdk-13-jdk
   proceed
 }
 
 function installNginx() {
-  sudo apt-get install -y nginx nodejs npm
+  sudo apt-get install -y --force-yes nginx nodejs npm
   proceed
   sudo npm install pm2 -g
   proceed
