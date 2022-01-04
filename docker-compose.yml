@@ -17,7 +17,7 @@ services:
     volumes:
       - elastic:/usr/share/elasticsearch/data
   platform:
-    image: "boodskapiot/platform:4.2.8-02"
+    image: "boodskapiot/platform:4.4.9-02"
     ports:
       - "18080:18080"
       - "19090:19090"
@@ -29,7 +29,7 @@ services:
       - ./share:/root/data/share
       - ./work:/home/boodskap/work
   ui:
-    image: "boodskapiot/ui:v3.2.5"
+    image: "boodskapiot/ui:v3.4.4"
     ports:
       - "4201:4201"
   dashboard:
