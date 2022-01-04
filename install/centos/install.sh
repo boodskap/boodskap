@@ -212,11 +212,13 @@ function installBoodskapUi() {
   git clone https://github.com/BoodskapPlatform/platform-dashboard.git ${HOMEDIR}/boodskapui/webapps/platform-dashboard
 
   cd ${HOMEDIR}/boodskapui/webapps/boodskap-ui
+  git checkout ${UI_VERSION}
   npm install
   sudo cat ${WORKDIR}/ubuntu/boodskapui.properties > ${HOMEDIR}/boodskapui/webapps/boodskap-ui/boodskapui.properties
   node build.js
 
   cd ${HOMEDIR}/boodskapui/webapps/platform-dashboard
+  git checkout ${DASHBOARD_VERSION}
   npm install
   node build.js
 

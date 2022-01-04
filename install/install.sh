@@ -2,6 +2,11 @@
 
 #set -e
 
+BOODSKAP_VER="4.4.9"
+BOODSKAP_PATCH_VER="02"
+UI_VERSION="v3.4.4"
+DASHBOARD_VERSION="v1.0.3"
+
 CASSANDRA_GID=5001
 ELASTIC_GID=5002
 EMQTT_GID=5003
@@ -22,8 +27,6 @@ KIBANA_VER="kibana-7.5.1"
 EMQTT_BASE="https://www.emqx.io/downloads/broker/v3.2.7"
 EMQTT_VER="emqx-ubuntu18.04-v3.2.7"
 BOODSKAP_BASE="https://github.com/BoodskapPlatform/boodskap-platform/releases/download"
-BOODSKAP_VER="4.4.9"
-BOODSKAP_PATCH_VER="02"
 
 
 if cat /etc/*release | grep ^NAME | grep CentOS; then
