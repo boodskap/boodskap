@@ -70,15 +70,21 @@ source ./${OS}/install.sh
 
 installCommons
 
-while true; do
-    read -p "Do you wish to install Cassandra? [y/n]" yn
-    case $yn in
-        [Yy]* ) installCassandra; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+if [[ "$INSTALL_CASSANDRA" == "" ]]; then
+  while true; do
+      read -p "Do you wish to install Cassandra? [y/n]" yn
+      case $yn in
+          [Yy]* ) installCassandra; break;;
+          [Nn]* ) break;;
+          * ) echo "Please answer yes or no.";;
+      esac
+  done
+elif [[ "$INSTALL_CASSANDRA" == "y" ]]
+then
+  installCassandra
+fi
 
+if [[ "$INSTALL_ELASTIC" == "" ]]; then
 while true; do
     read -p "Do you wish to install ElasticSearch? [y/n]" yn
     case $yn in
@@ -87,7 +93,12 @@ while true; do
            * ) echo "Please answer yes or no.";;
     esac
 done
+elif [[ "$INSTALL_ELASTIC" == "y" ]]
+then
+installElastic
+fi
 
+if [[ "$INSTALL_KIBANA" == "" ]]; then
 while true; do
     read -p "Do you wish to install Kibana? [y/n]" yn
     case $yn in
@@ -96,7 +107,12 @@ while true; do
            * ) echo "Please answer yes or no.";;
     esac
 done
+elif [[ "$INSTALL_KIBANA" == "y" ]]
+then
+installKibana
+fi
 
+if [[ "$INSTALL_EMQX" == "" ]]; then
 while true; do
     read -p "Do you wish to install Emqx? [y/n]" yn
     case $yn in
@@ -105,7 +121,12 @@ while true; do
            * ) echo "Please answer yes or no.";;
     esac
 done
+elif [[ "$INSTALL_EMQX" == "y" ]]
+then
+installEmqx
+fi
 
+if [[ "$INSTALL_PLATFORM" == "" ]]; then
 while true; do
     read -p "Do you wish to install Boodskap IoT Platform? [y/n]" yn
     case $yn in
@@ -114,7 +135,12 @@ while true; do
            * ) echo "Please answer yes or no.";;
     esac
 done
+elif [[ "$INSTALL_PLATFORM" == "y" ]]
+then
+installBoodskap
+fi
 
+if [[ "$INSTALL_UI" == "" ]]; then
 while true; do
     read -p "Do you wish to install Boodskap Admin UI? [y/n]" yn
     case $yn in
@@ -123,5 +149,9 @@ while true; do
            * ) echo "Please answer yes or no.";;
     esac
 done
+elif [[ "$INSTALL_UI" == "y" ]]
+then
+installBoodskapUi
+fi
 
 echo "All Done."
