@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+
+    ignite01:
+        image: "apacheignite/ignite:2.14.0"
+        hostname: ignite01
+        networks:
+            - ignitenet
+            - platformnet
+        environment:
+            - IGNITE_WORK_DIR=/work
+            - CONFIG_URI=/config/cluster.xml
+            - "JVM_OPTS=-Xms1g -Xmx1g"
+            - "CONTROL_JVM_OPTS=-Xms1g -Xmx1g"
+            - "OPTION_LIBS=ignite-zookeeper"
+        volumes:
+            - ./ignite01:/work
+            - ./config:/config
+
+networks:
+  ignitenet:
+    external: true
+  platformnet:
+    external: true

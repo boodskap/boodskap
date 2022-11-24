@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+
+    ui01:
+        image: "boodskapiot/ui:5.0.15-alpha"
+        hostname: ui01
+        networks:
+            - uinet
+            - platformnet
+networks:
+  uinet:
+    external: true
+  platformnet:
+    external: true

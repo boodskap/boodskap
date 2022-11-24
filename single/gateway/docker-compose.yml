@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+
+    nginx01:
+        image: "nginx:stable-perl"
+        hostname: nginx01
+        ports:
+            - "80:80"
+            - "433:443"
+        networks:
+            - gwnet
+            - platformnet
+            - uinet
+            - dashboardnet
+            - emqxnet
+        volumes:
+            - ./conf.d:/etc/nginx/conf.d
+
+networks:
+  gwnet:
+    external: true
+  platformnet:
+    external: true
+  uinet:
+    external: true
+  dashboardnet:
+    external: true
+  emqxnet:
+    external: true
