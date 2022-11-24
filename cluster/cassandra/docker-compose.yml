@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+
+    cassandra01:
+        image: "cassandra:4.1"
+        hostname: cassandra01
+        networks:
+            - cassandranet
+        environment:
+            CASSANDRA_BROADCAST_ADDRESS: "cassandra01"
+            CASSANDRA_SEEDS: "cassandra01,cassandra01"
+            CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+        volumes:
+            - ./cassandra01:/var/lib/cassandra
+
+    cassandra02:
+        image: "cassandra:4.1"
+        hostname: cassandra02
+        networks:
+            - cassandranet
+        environment:
+            CASSANDRA_BROADCAST_ADDRESS: "cassandra02"
+            CASSANDRA_SEEDS: "cassandra02,cassandra01"
+            CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+        volumes:
+            - ./cassandra02:/var/lib/cassandra
+
+networks:
+  cassandranet:
+    external: true

@@ -1,0 +1,144 @@
+version: '3.3'
+
+services:
+
+    platform01:
+        image: "boodskapiot/platform:5.0.0-31-alpha"
+        hostname: platform01
+        networks:
+            - platformnet
+        environment:
+            - "JVM_OPTS=-Xms512m -Xmx512m -server -Dtinylog.configuration=/opt/boodskap/config/tinylog.properties"
+            - "BOODSKAP_ID=1"
+            - "BOODSKAP_DB_INIT=true"
+            - "BOODSKAP_TYPE=SERVER"
+            - "MQTT_ENDPOINT=tcp://emqx01.io:1883"
+            - "SHARED_FOLDER=/shared"
+        depends_on:
+            - nginx01
+            - nginx02
+            - cassandra01
+            - elastic01
+            - emqx01
+        volumes:
+            - ./platform01/config:/opt/boodskap/config
+            - ./platform01/data:/data
+            - /Users/jegan/docker/5.x.x-full/shared:/shared
+
+    platform02:
+        image: "boodskapiot/platform:5.0.0-31-alpha"
+        hostname: platform01
+        networks:
+            - platformnet
+        environment:
+            - "JVM_OPTS=-Xms512m -Xmx512m -server -Dtinylog.configuration=/opt/boodskap/config/tinylog.properties"
+            - "BOODSKAP_ID=2"
+            - "BOODSKAP_DB_INIT=false"
+            - "BOODSKAP_TYPE=SERVER"
+            - "MQTT_ENDPOINT=tcp://emqx02.io:1883"
+            - "SHARED_FOLDER=/shared"
+        depends_on:
+            - cassandra01
+            - elastic01
+            - emqx02
+        volumes:
+            - ./platform02/config:/opt/boodskap/config
+            - ./platform02/data:/data
+            - /Users/jegan/docker/5.x.x-full/shared:/shared
+
+    platformui01:
+        image: boodskapiot/ui:3.5.1
+        hostname: platformui01
+        networks:
+            - platformnet
+
+    platformui02:
+        image: boodskapiot/ui:3.5.1
+        hostname: platformui02
+        networks:
+            - platformnet
+
+    emqx01:
+        image: boodskapiot/emqx:3.2.8
+        hostname: emqx01.io
+        networks:
+            - platformnet
+        environment:
+            EMQX_HOST: "emqx01.io"
+            EMQX_NAME: "emqx01"
+        volumes:
+            - ./emqx01:/efs/emqx
+
+    emqx02:
+        image: boodskapiot/emqx:3.2.8
+        hostname: emqx02.io
+        networks:
+            - platformnet
+        environment:
+            EMQX_HOST: "emqx02.io"
+            EMQX_NAME: "emqx02"
+        volumes:
+            - ./emqx02:/efs/emqx
+
+    elastic01:
+        image: "docker.elastic.co/elasticsearch/elasticsearch:8.4.1"
+        hostname: elastic01
+        networks:
+            - platformnet
+        ports:
+            - "9200:9200"
+        environment:
+            - node.name=node1
+            - cluster.name=bskp-cluster
+            - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+            - discovery.seed_hosts=elastic01
+            - cluster.initial_master_nodes=node1
+            - xpack.security.enabled=false
+            - bootstrap.memory_lock=false
+        volumes:
+            - ./elastic01:/usr/share/elasticsearch/data
+
+    cassandra01:
+        image: "cassandra:4.1"
+        hostname: cassandra01
+        networks:
+            - platformnet
+        ports:
+            - "9042:9042"
+            - "7000:7000"
+        environment:
+            CASSANDRA_BROADCAST_ADDRESS: "cassandra01"
+            CASSANDRA_SEEDS: "cassandra01"
+            CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+        volumes:
+            - ./cassandra01:/var/lib/cassandra
+
+    nginx01:
+        image: "nginx:stable-perl"
+        hostname: nginx01
+        networks:
+            - platformnet
+        volumes:
+            - ./nginx:/etc/nginx/conf.d
+
+    nginx02:
+        image: "nginx:stable-perl"
+        hostname: nginx02
+        networks:
+            - platformnet
+        volumes:
+            - ./nginx:/etc/nginx/conf.d
+
+    proxy:
+        image: "nginx:stable-perl"
+        hostname: proxy
+        networks:
+            - platformnet
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./proxy:/etc/nginx/conf.d
+
+networks:
+  platformnet:

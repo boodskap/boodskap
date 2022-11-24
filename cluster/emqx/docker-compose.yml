@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+
+    emqx01:
+        image: boodskapiot/emqx:3.2.8
+        hostname: emqx01.io
+        networks:
+            - emqxnet
+            - platformnet
+        environment:
+            EMQX_HOST: "emqx01.io"
+            EMQX_NAME: "emqx01"
+        volumes:
+            - ./emqx01:/efs/emqx
+
+    emqx02:
+        image: boodskapiot/emqx:3.2.8
+        hostname: emqx02.io
+        networks:
+            - emqxnet
+            - platformnet
+        environment:
+            EMQX_HOST: "emqx02.io"
+            EMQX_NAME: "emqx02"
+        volumes:
+            - ./emqx02:/efs/emqx
+
+networks:
+  emqxnet:
+    external: true
+  platformnet:
+    external: true

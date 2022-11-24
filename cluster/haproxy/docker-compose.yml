@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+
+    haproxy:
+        image: "haproxy:lts-bullseye"
+        hostname: haproxy
+        ports:
+            - "1883:1883"
+        networks:
+            - gwnet
+            - emqxnet
+        volumes:
+            - ./etc:/usr/local/etc/haproxy
+networks:
+  gwnet:
+    external: true
+  emqxnet:
+    external: true

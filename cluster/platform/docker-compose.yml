@@ -1,0 +1,57 @@
+version: '3.3'
+
+services:
+
+    platform01:
+        image: "boodskapiot/platform:5.0.0-32-alpha"
+        hostname: platform01
+        networks:
+            - ignitenet
+            - platformnet
+            - cassandranet
+            - elasticnet
+            - emqxnet
+        environment:
+            - "JVM_OPTS=-Xms512m -Xmx512m -server -Dtinylog.configuration=/opt/boodskap/config/tinylog.properties"
+            - "BOODSKAP_ID=1"
+            - "BOODSKAP_DB_INIT=true"
+            - "BOODSKAP_TYPE=SERVER"
+            - "MQTT_ENDPOINT=tcp://emqx01.io:1883"
+            - "SHARED_FOLDER=/shared"
+        volumes:
+            - ./platform01/config:/opt/boodskap/config
+            - ./platform01/data:/data
+            - ./shared:/shared
+
+    platform02:
+        image: "boodskapiot/platform:5.0.0-32-alpha"
+        hostname: platform01
+        networks:
+            - ignitenet
+            - platformnet
+            - cassandranet
+            - elasticnet
+            - emqxnet
+        environment:
+            - "JVM_OPTS=-Xms512m -Xmx512m -server -Dtinylog.configuration=/opt/boodskap/config/tinylog.properties"
+            - "BOODSKAP_ID=2"
+            - "BOODSKAP_DB_INIT=false"
+            - "BOODSKAP_TYPE=SERVER"
+            - "MQTT_ENDPOINT=tcp://emqx02.io:1883"
+            - "SHARED_FOLDER=/shared"
+        volumes:
+            - ./platform02/config:/opt/boodskap/config
+            - ./platform02/data:/data
+            - ./shared:/shared
+
+networks:
+  platformnet:
+    external: true
+  cassandranet:
+    external: true
+  elasticnet:
+    external: true
+  emqxnet:
+    external: true
+  ignitenet:
+    external: true
