@@ -3,7 +3,7 @@ version: '3.3'
 services:
 
     platform01:
-        image: "boodskapiot/platform:5.0.0-32-alpha"
+        image: "boodskapiot/platform:5.0.0-33-alpha"
         hostname: platform01
         networks:
             - ignitenet
