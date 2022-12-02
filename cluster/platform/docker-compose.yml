@@ -15,6 +15,7 @@ services:
             - "JVM_OPTS=-Xms512m -Xmx512m -server -Dtinylog.configuration=/opt/boodskap/config/tinylog.properties"
             - "BOODSKAP_ID=1"
             - "BOODSKAP_DB_INIT=true"
+            - "MQTT_MASTER=true"
             - "BOODSKAP_TYPE=SERVER"
             - "MQTT_ENDPOINT=tcp://emqx01.io:1883"
             - "SHARED_FOLDER=/shared"
