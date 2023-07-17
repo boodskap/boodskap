@@ -1,55 +1,161 @@
-version: "3.3"
-services:
-  cassandra:
-    image: "cassandra:3.11.5"
-    ports:
-      - "9042:9042"
-      - "7000:7000"
-    volumes:
-      - cassandra:/var/lib/cassandra
-  elastic:
-    image: "docker.elastic.co/elasticsearch/elasticsearch:7.5.1"
-    environment:
-      - discovery.type=single-node
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - elastic:/usr/share/elasticsearch/data
-  platform:
-    image: "boodskapiot/platform:4.4.9-02"
-    ports:
-      - "18080:18080"
-      - "19090:19090"
-    depends_on:
-      - cassandra
-      - elastic
-    volumes:
-      - ./data:/root/data
-      - ./share:/root/data/share
-      - ./work:/home/boodskap/work
-  ui:
-    image: "boodskapiot/ui:v3.4.4"
-    ports:
-      - "4201:4201"
-  dashboard:
-    image: "boodskapiot/dashboard:v1.0.3"
-    ports:
-      - "10000:10000"
-  gateway:
-    image: "boodskapiot/gateway:v1.0.3"
-    ports:
-      - "80:80"
-    depends_on:
-      - platform
+version: '3.3'
+
+networks:
+  platformnet:
+
 volumes:
-  cassandra:
-    driver: local
-  elastic:
-    driver: local
-  platformdata:
-    driver: local
-  platformshare:
-    driver: local
-  platformwork:
-    driver: local
+  vcass01:
+  velastic01:
+  vzoo01:
+  vkafka01:
+  vignite01:
+  vboodskap01:
+  vshared:
+
+services:
+
+    nginx01:
+        image: nginx:stable-perl
+        hostname: nginx01
+        depends_on:
+            - boodskap01
+            - ui01
+        ports:
+            - "80:80"
+            - "443:443"
+        networks:
+            - platformnet
+        restart: on-failure
+        volumes:
+            - ./config/nginx/sites-enabled:/etc/nginx/conf.d
+
+    boodskap01:
+        image: boodskapiot/platform:5.2.0-00
+        hostname: boodskap01
+        depends_on:
+            - kafka01
+            - emqx01
+            - cass01
+            - elastic01
+            - ignite01
+        ports:
+            - "18080:18080"
+        networks:
+            - platformnet
+        environment:
+            BOODSKAP_ID: "1"
+            BOODSKAP_PRIMARY: "true"
+            BOODSKAP_TYPE: SERVER
+            MQTT_ENDPOINT: "tcp://emqx01.io:1883"
+            JVM_OPTS: "-Xms4g -Xmx4g"
+            MQTT_MASTER: "true"
+        restart: on-failure
+        volumes:
+            - vboodskap01:/data
+            - vshared:/shared
+            - ./config/boodskap01:/opt/boodskap/config
+
+    ui01:
+        image: boodskapiot/ui:5.1.0
+        hostname: ui01
+        ports:
+            - "4201:4201"
+        networks:
+            - platformnet
+
+    ignite01:
+        image: "apacheignite/ignite:2.14.0"
+        hostname: ignite01
+        networks:
+            - platformnet
+        ports:
+            - "47500:47500"
+            - "47100:47100"
+        environment:
+            - "IGNITE_WORK_DIR=/work"
+            - "JVM_OPTS=-Xms2g -Xmx2g"
+            - "CONTROL_JVM_OPTS=-Xms1g -Xmx1g"
+        restart: on-failure
+        volumes:
+            - vignite01:/work
+            - ./config/ignite01:/opt/ignite/apache-ignite/config
+
+    emqx01:
+        image: emqx:5.0.20
+        hostname: emqx01.io
+        ports:
+            - "1883:1883"
+            - "8883:8883"
+        networks:
+            - platformnet
+        environment:
+            - "EMQX_NODE_NAME=emqx@emqx01.io"
+            - "EMQX_CLUSTER__DISCOVERY_STRATEGY=static"
+            - "EMQX_CLUSTER__STATIC__SEEDS=[emqx@emqx01.io]"
+        restart: on-failure
+        volumes:
+            - ./config/emqx01:/opt/emqx/data/configs
+
+    kafka01:
+        image: boodskapiot/kafka:13-3.4.0
+        hostname: kafka01
+        depends_on:
+            - zoo01
+        ports:
+            - "9092:9092"
+        networks:
+            - platformnet
+        environment:
+            CONFIG_FILE: "/kafka/conf/server.properties"
+        volumes:
+            - vkafka01:/data
+            - ./config/kafka01:/kafka
+
+    zoo01:
+        image: boodskapiot/zookeeper:3.7.1
+        hostname: zoo01
+        ports:
+        ports:
+            - "2181:2181"
+        networks:
+            - platformnet
+        environment:
+            CONFIG_DIR: "/zookeeper/conf"
+        restart: on-failure
+        volumes:
+            - vzoo01:/data
+            - ./config/zoo01:/zookeeper
+
+    elastic01:
+        image: "elasticsearch:8.8.1"
+        hostname: elastic01
+        networks:
+            - platformnet
+        ports:
+            - "9200:9200"
+        environment:
+            - node.name=node1
+            - cluster.name=bskp-cluster
+            - "ES_JAVA_OPTS=-Xms6g -Xmx6g"
+            - cluster.initial_master_nodes=node1
+            - xpack.security.enabled=false
+            - bootstrap.memory_lock=false
+        restart: on-failure
+        volumes:
+            - velastic01:/usr/share/elasticsearch/data
+
+    cass01:
+        image: "cassandra:4.1"
+        hostname: cass01
+        networks:
+          platformnet:
+        ports:
+            - "7000:7000"
+            - "9042:9042"
+        environment:
+            CASSANDRA_BROADCAST_ADDRESS: "cass01"
+            CASSANDRA_SEEDS: "cass01"
+            CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+        restart: on-failure
+        volumes:
+            - vcass01:/var/lib/cassandra
