@@ -62,6 +62,9 @@ services:
             - "4201:4201"
         networks:
             - platformnet
+        restart: on-failure
+        volumes:
+            - ./config/ui01:/et/boodskapui
 
     ignite01:
         image: "apacheignite/ignite:2.14.0"
