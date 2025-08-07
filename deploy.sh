@@ -1,3 +1,3 @@
 #!/bin/bash
-docker-compose up --no-start
+docker compose up --no-start
 
